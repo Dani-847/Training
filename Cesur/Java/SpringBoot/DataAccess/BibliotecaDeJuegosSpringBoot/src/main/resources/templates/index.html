@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Biblioteca de Juegos</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <header><h1>Biblioteca de Jueg<a th:href="@{/847}" style="color:inherit;text-decoration:none">o</a>s</h1></header>
+
+
+    <nav class="platforms-nav">
+        <a th:href="@{/}" th:classappend="${selectedPlatform == null} ? 'active' : ''">Todos</a>
+        <span th:each="p : ${platforms}">
+                | <a th:href="@{/(platform=${p})}" th:text="${p}" th:classappend="${selectedPlatform == p} ? 'active' : ''"></a>
+            </span>
+    </nav>
+
+    <main>
+        <h2 th:if="${selectedPlatform != null}" th:text="${selectedPlatform}"></h2>
+
+        <div class="games-grid">
+            <a th:each="g : ${games}" th:href="@{'/juego/'+${g.id}}" class="game-card">
+                <img th:src="@{'https://picsum.photos/seed/'+${g.id}+'/200/150'}" alt="Game image">
+                <div class="game-info">
+                    <h3 th:text="${g.title}"></h3>
+                    <p th:text="${g.platform}"></p>
+                </div>
+            </a>
+        </div>
+    </main>
+
+    <footer>
+        <p>Realizado por Daniel</p>
+    </footer>
+</div>
+</body>
+</html>

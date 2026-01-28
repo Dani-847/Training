@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${game.title} + ' - Biblioteca de Juegos'">Detalle</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>Biblioteca de Juegos</h1>
+    </header>
+
+    <nav class="platforms-nav">
+        <a th:href="@{/}">Todos</a>
+        <span th:each="p : ${platforms}">
+                | <a th:href="@{/(platform=${p})}" th:text="${p}"></a>
+            </span>
+    </nav>
+
+    <main class="game-detail">
+        <div class="detail-content">
+            <img th:src="@{'https://picsum.photos/seed/'+${game.id}+'/250/300'}" alt="Game image" class="detail-image">
+            <div class="detail-info">
+                <h2 th:text="${game.title}"></h2>
+                <p class="platform" th:text="${game.platform}"></p>
+                <p class="year" th:text="${game.year}"></p>
+            </div>
+        </div>
+        <div class="description-box">
+            <p th:text="${game.description}"></p>
+        </div><a href="/" class="btn-volver">Volver</a>
+    </main>
+
+    <footer>
+        <p>Realizado por Daniel</p>
+    </footer>
+</div>
+</body>
+</html>
