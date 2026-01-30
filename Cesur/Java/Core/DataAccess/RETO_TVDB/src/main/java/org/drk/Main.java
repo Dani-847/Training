@@ -1,52 +1,361 @@
 package org.drk;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-
+import com.google.gson.*;
 import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.net.URLEncoder;
+import java.net.http.*;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.util.*;
 
-/**
- * Aplicación para consultar la API REST de TheTVDB
- * Documentación API: https://github.com/thetvdb/v4-api
- * Base URL: https://api4.thetvdb.com/v4
- */
 public class Main {
 
     private static final String BASE_URL = "https://api4.thetvdb.com/v4";
-    private static final String TOKEN = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZ2UiOiIiLCJhcGlrZXkiOiIzMTI4ZWEzZS1mZmMzLTRkNzktYWI3MS00MDE2NDEyMjg1NjgiLCJjb21tdW5pdHlfc3VwcG9ydGVkIjpmYWxzZSwiZXhwIjoxNzcyNDEyMjQ2LCJnZW5kZXIiOiIiLCJoaXRzX3Blcl9kYXkiOjEwMDAwMDAwMCwiaGl0c19wZXJfbW9udGgiOjEwMDAwMDAwMCwiaWQiOiIyOTQxMzY5IiwiaXNfbW9kIjpmYWxzZSwiaXNfc3lzdGVtX2tleSI6ZmFsc2UsImlzX3RydXN0ZWQiOmZhbHNlLCJwaW4iOm51bGwsInJvbGVzIjpbXSwidGVuYW50IjoidHZkYiIsInV1aWQiOiIifQ.J_CW6sb7gr_jMQ6kGcZpQdOp2PraICKXIdy-skPPXRyacxyqBJhgeKXgEtut0bsc7ezihg9PUSaIxARL9G1bQg_EgQQGXs8FZEQwh6DkWY6nlXxLKqxyqxv-jdxhBUSnP2STYBk5CxtS0s1gmyOc_57GjVn5-2pISfm0FheF8_m8SEE6ZNax-yBnF9bZovsmFDnIheq_A-lQFTMClY3-fwI0BT4CX7JnA1lDcw-mVopt8XrPRGx5NpX41ykWWzQKO-iK_SGOZQgizRIwXeQj-7X8uEudOpmA1CynbYk7DdONlpPchwW2jAP6hzWoizidKP7_ttqbeW_MTykMuiihORofxzhrneqHl8-9gYHRfnch3y-jBBfe2wDavYZW15Jqz_UMZYCNd4ASJWw6Xt7DVwvnLHjbYyFeuhasiKH-w9Ob48Krp7a-ukZoacxRfjXMqm6YmbRTCnwqWqVntNMASGBWkJcPBFO2nv6or3sGz3KiN1PkKgl0Afyltk36dnMyklB33OxRsv6KuwpR42fZIEXAOo5PVt3x6XCQXvCYwhPY8oXCYVgxCR4nZyhnp3jR3rf9Ma3NjwYvJruJcNgsUxrMPBhLj0m5gX0h3KqnIg0nKXsLMSFgSo7bOjYgl5vQL9miVE9CNTuGins7BSFwX8QY5nyyOG_JcwHB6Usj7jg";
+    private static final String TOKEN = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZ2UiOiIiLCJhcGlrZXkiOiIzMTI4ZWEzZS1mZmMzLTRkNzktYWI3MS00MDE2NDEyMjg1NjgiLCJjb21tdW5pdHlfc3VwcG9ydGVkIjpmYWxzZSwiZXhwIjoxNzcyNDE2NTEzLCJnZW5kZXIiOiIiLCJoaXRzX3Blcl9kYXkiOjEwMDAwMDAwMCwiaGl0c19wZXJfbW9udGgiOjEwMDAwMDAwMCwiaWQiOiIyOTQxMzY5IiwiaXNfbW9kIjpmYWxzZSwiaXNfc3lzdGVtX2tleSI6ZmFsc2UsImlzX3RydXN0ZWQiOmZhbHNlLCJwaW4iOm51bGwsInJvbGVzIjpbXSwidGVuYW50IjoidHZkYiIsInV1aWQiOiIifQ.Ux-PbBJlhQ9cAbYNpeprVXOSrnbpodYM1UFC0cbzWAVFZgHh2oaqc1qcMtExhJf58jE97uQvXjG_lDkfHFSl-I57GtnIPBVWQAhfNL89j1VbKH4kBzJOdzbGvETu_7aZ5LcZI3UQoAcKhCscmN-VqdfVZqL6sC1JuqQWkqVkwUyul7m2V9RR2939c2n07FdWTBXPf2iNLZ0yUzAOMcE0H_nx5DpYZSVUBCI3VSiLTN6f-Nq6MqBTR0P4olXf6Rc22y__c67YFyy2yfCUAtju_ldebPss0imvBGLBFSOMFUhpqUo2IvOrzWiOKLLijCvMdaLwKPAJG8Ix5Qz6NJuZyNa8z5kRUBmo5ijUBV2_axKluQlCBnQTM-7nylUxwL-neZasDY-DE030w_Yq5itR7-V-0AExlgEWEKni2_71yDzBAGdtgT4HYJ3FFO5dbZXyFL8JaLHl1Fc85tt987-hFAGmF-cq2Vk9V6I7DEr5mikFdgFW2T7tDml0p0QVZ3JwpaKu8oNst0kOimPghFXqx2L_-OcOyyZDuVELEulXYPuBUlmkbaeAsnqHdU1DqfFGT92ZrVYbo0wXf4hSF5MfjxHeL4MOUc15CodeBMebKWVJlycmH-FeTMUfQ9KbvZ6BLDrdYRGS2YHwU4snz8rzaoNRcF2_Unr83yB4Z_FhbLE";
 
-    private static final HttpClient client = HttpClient.newHttpClient();
-    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    private static final HttpClient CLIENT = HttpClient.newBuilder()
+            .connectTimeout(Duration.ofSeconds(15))
+            .build();
 
-    public static void main(String[] args) throws Exception {
-        System.out.println("=== 1. SERIES DE DRAGON BALL ===");
-        buscarSeriesDragonBall();
+    public static void main(String[] args) {
+        try {
+            System.out.println("╔════════════════════════════════════════════════════════════════╗");
+            System.out.println("║              CONSULTAS API TVDB - DRAGON BALL                  ║");
+            System.out.println("╚════════════════════════════════════════════════════════════════╝\n");
 
-        System.out.println("\n=== 2. POSTER SERIE MÁS ANTIGUA (1986) ===");
-        obtenerPosterSerieAntigua();
+            List<JsonObject> seriesDragonBall = buscarSeriesDragonBall();
+            JsonObject serieMasAntigua = encontrarSerieMasAntigua(seriesDragonBall);
 
-        System.out.println("\n=== 3. PRIMER EPISODIO 3ª TEMPORADA ===");
-        obtenerPrimerEpisodioTemporada3();
+            mostrarEjercicio1(seriesDragonBall);
+            mostrarEjercicio2(serieMasAntigua);
+            mostrarEjercicio3(serieMasAntigua);
+            mostrarEjercicio4();
+            mostrarEjercicio5();
 
-        System.out.println("\n=== 4. ACTOR DE GOKU EN DRAGONBALL EVOLUTION ===");
-        buscarActorGoku();
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
-        System.out.println("\n=== 5. MEJOR PELÍCULA USA 2009 ===");
-        buscarMejorPeliculaUSA2009();
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // EJERCICIOS
+    // ═══════════════════════════════════════════════════════════════════════════════
+
+    /**
+     * EJERCICIO 1: Cuántas series contienen "Dragon Ball" en el título.
+     * Muestra el total y la lista de series encontradas.
+     */
+    private static void mostrarEjercicio1(List<JsonObject> series) {
+        System.out.println("┌────────────────────────────────────────────────────────────────┐");
+        System.out.println("│ 1. SERIES QUE CONTIENEN \"DRAGON BALL\" EN EL TÍTULO            │");
+        System.out.println("└────────────────────────────────────────────────────────────────┘");
+        System.out.println("  Total: " + series.size() + " series\n");
+
+        for (int i = 0; i < series.size(); i++) {
+            JsonObject s = series.get(i);
+            String nombre = obtenerNombreDragonBall(s);
+            String year = getString(s, "year");
+            System.out.printf("  %2d. %s (%s)%n", i + 1, nombre, year != null ? year : "?");
+        }
+        System.out.println();
     }
 
     /**
-     * Método auxiliar para realizar peticiones GET a la API
-     * Todas las peticiones requieren el header Authorization con el Bearer token
+     * EJERCICIO 2: URL del póster de la serie más antigua de Dragon Ball.
      */
-    private static String hacerPeticion(String endpoint) throws Exception {
+    private static void mostrarEjercicio2(JsonObject masAntigua) {
+        System.out.println("┌────────────────────────────────────────────────────────────────┐");
+        System.out.println("│ 2. PÓSTER DE LA SERIE MÁS ANTIGUA                              │");
+        System.out.println("└────────────────────────────────────────────────────────────────┘");
+
+        if (masAntigua != null) {
+            String nombre = obtenerNombreDragonBall(masAntigua);
+            String year = getString(masAntigua, "year");
+            String imageUrl = getString(masAntigua, "image_url");
+
+            System.out.println("  Serie: " + nombre + " (" + year + ")");
+            System.out.println("  Póster: " + (imageUrl != null ? imageUrl : "No disponible"));
+        } else {
+            System.out.println("  No se encontró ninguna serie.");
+        }
+        System.out.println();
+    }
+
+    /**
+     * EJERCICIO 3: Información del primer episodio de la 3ª temporada en español.
+     * @endpoint GET /series/{id}/episodes/default/spa?season=3
+     */
+    private static void mostrarEjercicio3(JsonObject masAntigua) throws Exception {
+        System.out.println("┌────────────────────────────────────────────────────────────────┐");
+        System.out.println("│ 3. PRIMER EPISODIO DE LA 3ª TEMPORADA (EN ESPAÑOL)             │");
+        System.out.println("└────────────────────────────────────────────────────────────────┘");
+
+        if (masAntigua == null) {
+            System.out.println("  No hay serie base para consultar.");
+            return;
+        }
+
+        String serieId = getString(masAntigua, "tvdb_id");
+        String nombreSerie = obtenerNombreDragonBall(masAntigua);
+        System.out.println("  Serie: " + nombreSerie + " (ID: " + serieId + ")");
+
+        JsonObject response = get("/series/" + serieId + "/episodes/default/spa?season=3");
+        JsonObject data = response.getAsJsonObject("data");
+        JsonArray episodes = data != null ? data.getAsJsonArray("episodes") : null;
+
+        if (episodes != null && episodes.size() > 0) {
+            JsonObject primerEpisodio = encontrarPrimerEpisodio(episodes);
+
+            System.out.println("  Temporada: 3, Episodio: " + getInt(primerEpisodio, "number"));
+            System.out.println("  Fecha: " + getString(primerEpisodio, "aired"));
+            System.out.println("  Nombre: " + valorODefault(getString(primerEpisodio, "name")));
+            System.out.println("  Descripción: " + valorODefault(getString(primerEpisodio, "overview")));
+        } else {
+            System.out.println("  No se encontraron episodios para la temporada 3.");
+        }
+        System.out.println();
+    }
+
+    /**
+     * EJERCICIO 4: Actor que interpreta a Goku en Dragonball Evolution (2009).
+     * @endpoint GET /search?query=Dragonball+Evolution&type=movie
+     * @endpoint GET /movies/{id}/extended
+     * @endpoint GET /people/{id}/extended
+     */
+    private static void mostrarEjercicio4() throws Exception {
+        System.out.println("┌────────────────────────────────────────────────────────────────┐");
+        System.out.println("│ 4. ACTOR DE GOKU EN DRAGONBALL EVOLUTION (2009)                │");
+        System.out.println("└────────────────────────────────────────────────────────────────┘");
+
+        JsonObject searchResult = get("/search?query=" + encode("Dragonball Evolution") + "&type=movie");
+        JsonArray peliculas = searchResult.getAsJsonArray("data");
+
+        String movieId = null;
+        for (JsonElement e : peliculas) {
+            JsonObject p = e.getAsJsonObject();
+            String nombre = getString(p, "name");
+            String year = getString(p, "year");
+            if (nombre != null && nombre.toLowerCase().contains("dragonball evolution") && "2009".equals(year)) {
+                movieId = getString(p, "tvdb_id");
+                break;
+            }
+        }
+
+        String actorName = null;
+        int participaciones = 0;
+
+        if (movieId != null) {
+            JsonObject movieDetail = get("/movies/" + movieId + "/extended");
+            JsonObject movieData = movieDetail.getAsJsonObject("data");
+            JsonArray characters = movieData != null ? movieData.getAsJsonArray("characters") : null;
+
+            Integer peopleId = null;
+            if (characters != null) {
+                for (JsonElement e : characters) {
+                    JsonObject c = e.getAsJsonObject();
+                    String charName = getString(c, "name");
+                    if (charName != null && charName.toLowerCase().contains("goku")) {
+                        actorName = getString(c, "personName");
+                        peopleId = getInt(c, "peopleId");
+                        break;
+                    }
+                }
+            }
+
+            if (peopleId != null) {
+                JsonObject personDetail = get("/people/" + peopleId + "/extended");
+                JsonObject personData = personDetail.getAsJsonObject("data");
+                JsonArray personCharacters = personData != null ? personData.getAsJsonArray("characters") : null;
+                participaciones = personCharacters != null ? personCharacters.size() : 0;
+            }
+        }
+
+        System.out.println("  Actor: " + valorODefault(actorName));
+        System.out.println("  Participaciones totales: " + participaciones);
+        System.out.println();
+    }
+
+    /**
+     * EJERCICIO 5: Mejor película de USA del mismo año que "La Guerra de los Mundos".
+     * @endpoint GET /search?query=War+of+the+Worlds&type=movie
+     * @endpoint GET /movies/filter?country=usa&year={year}&sort=score&sortType=desc
+     */
+    private static void mostrarEjercicio5() throws Exception {
+        System.out.println("┌────────────────────────────────────────────────────────────────┐");
+        System.out.println("│ 5. MEJOR PELÍCULA USA DEL AÑO DE \"LA GUERRA DE LOS MUNDOS\"     │");
+        System.out.println("└────────────────────────────────────────────────────────────────┘");
+
+        JsonObject warSearch = get("/search?query=" + encode("War of the Worlds") + "&type=movie");
+        JsonArray warResults = warSearch.getAsJsonArray("data");
+
+        Integer warYear = null;
+        for (JsonElement e : warResults) {
+            JsonObject m = e.getAsJsonObject();
+            String nombre = getString(m, "name");
+            if (nombre != null && nombre.equalsIgnoreCase("War of the Worlds")) {
+                warYear = getInt(m, "year");
+                break;
+            }
+        }
+
+        if (warYear != null) {
+            JsonObject filterResult = get("/movies/filter?country=usa&year=" + warYear + "&sort=score&sortType=desc");
+            JsonArray movies = filterResult.getAsJsonArray("data");
+
+            if (movies != null && movies.size() > 0) {
+                JsonObject mejor = movies.get(0).getAsJsonObject();
+                System.out.println("  Año: " + warYear);
+                System.out.println("  Mejor película: " + getString(mejor, "name"));
+                System.out.println("  Score: " + getString(mejor, "score"));
+            }
+        } else {
+            System.out.println("  No se encontró 'War of the Worlds'.");
+        }
+        System.out.println();
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // MÉTODOS DE BÚSQUEDA
+    // ═══════════════════════════════════════════════════════════════════════════════
+
+    /**
+     * Busca todas las series que contienen "Dragon Ball" en el título.
+     * Busca en el nombre principal, traducciones y aliases. //usa las aliases porque las principales a veces estan en el idioma original (japonés)
+     * @endpoint GET /search?query=dragon+ball&offset={offset}
+     * @return Lista de series encontradas
+     */
+    private static List<JsonObject> buscarSeriesDragonBall() throws Exception {
+        List<JsonObject> resultado = new ArrayList<>();
+        int offset = 0;
+        final int PAGE_SIZE = 50;
+
+        while (true) {
+            JsonObject response = get("/search?query=" + encode("dragon ball") + "&offset=" + offset);
+            JsonArray data = response.getAsJsonArray("data");
+
+            if (data == null || data.size() == 0) break;
+
+            for (JsonElement e : data) {
+                JsonObject item = e.getAsJsonObject();
+                if (!"series".equals(getString(item, "type"))) continue;
+
+                if (contieneDragonBall(item)) {
+                    resultado.add(item);
+                }
+            }
+
+            JsonObject links = response.getAsJsonObject("links");
+            if (links == null || links.get("next").isJsonNull()) break;
+
+            Integer totalItems = getInt(links, "total_items");
+            if (totalItems == null || offset + PAGE_SIZE >= totalItems) break;
+
+            offset += PAGE_SIZE;
+        }
+
+        return resultado;
+    }
+
+    /**
+     * Verifica si un objeto contiene "Dragon Ball" en nombre, traducciones o aliases.
+     */
+    private static boolean contieneDragonBall(JsonObject item) {
+        // Verificar nombre principal
+        if (contieneTexto(getString(item, "name"), "dragon", "ball")) {
+            return true;
+        }
+
+        // Verificar traducciones
+        if (item.has("translations") && !item.get("translations").isJsonNull()) {
+            JsonObject translations = item.getAsJsonObject("translations");
+            for (String lang : translations.keySet()) {
+                if (contieneTexto(getString(translations, lang), "dragon", "ball")) {
+                    return true;
+                }
+            }
+        }
+
+        // Verificar aliases
+        if (item.has("aliases") && !item.get("aliases").isJsonNull()) {
+            JsonArray aliases = item.getAsJsonArray("aliases");
+            for (JsonElement alias : aliases) {
+                if (contieneTexto(alias.getAsString(), "dragon", "ball")) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Obtiene el nombre que contiene "Dragon Ball" de un objeto (nombre, traducción o alias).
+     */
+    private static String obtenerNombreDragonBall(JsonObject item) {
+        String nombre = getString(item, "name");
+        if (contieneTexto(nombre, "dragon", "ball")) {
+            return nombre;
+        }
+
+        if (item.has("translations") && !item.get("translations").isJsonNull()) {
+            JsonObject translations = item.getAsJsonObject("translations");
+            for (String lang : translations.keySet()) {
+                String traduccion = getString(translations, lang);
+                if (contieneTexto(traduccion, "dragon", "ball")) {
+                    return traduccion;
+                }
+            }
+        }
+
+        return nombre;
+    }
+
+    /**
+     * Encuentra la serie más antigua por año.
+     */
+    private static JsonObject encontrarSerieMasAntigua(List<JsonObject> series) {
+        JsonObject masAntigua = null;
+        int minYear = Integer.MAX_VALUE;
+
+        for (JsonObject s : series) {
+            Integer year = getInt(s, "year");
+            if (year != null && year < minYear) {
+                minYear = year;
+                masAntigua = s;
+            }
+        }
+        return masAntigua;
+    }
+
+    /**
+     * Encuentra el primer episodio de una lista por número de episodio.
+     */
+    private static JsonObject encontrarPrimerEpisodio(JsonArray episodes) {
+        JsonObject primero = null;
+        int minNum = Integer.MAX_VALUE;
+
+        for (JsonElement e : episodes) {
+            JsonObject ep = e.getAsJsonObject();
+            Integer num = getInt(ep, "number");
+            if (num == null) num = getInt(ep, "episodeNumber");
+            if (num != null && num < minNum) {
+                minNum = num;
+                primero = ep;
+            }
+        }
+        return primero != null ? primero : episodes.get(0).getAsJsonObject();
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════════
+    // UTILIDADES
+    // ═══════════════════════════════════════════════════════════════════════════════
+
+    /**
+     * Realiza una petición GET a la API.
+     * @endpoint GET {endpoint}
+     */
+    private static JsonObject get(String endpoint) throws Exception {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE_URL + endpoint))
                 .header("Authorization", "Bearer " + TOKEN)
@@ -54,334 +363,50 @@ public class Main {
                 .GET()
                 .build();
 
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        System.out.println("URL: " + BASE_URL + endpoint);
-        return response.body();
+        HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() != 200) {
+            throw new RuntimeException("HTTP " + response.statusCode() + ": " + response.body());
+        }
+
+        return JsonParser.parseString(response.body()).getAsJsonObject();
     }
 
-    /**
-     * PREGUNTA 1: ¿Cuántas series de "Dragon Ball" hay registradas?
-     *
-     * ENDPOINT USADO: GET /search?query=Dragon+Ball&type=series
-     *
-     * EXPLICACIÓN:
-     * - Usamos el endpoint de búsqueda /search con el parámetro query
-     * - Filtramos por type=series para obtener solo series (no películas)
-     * - Procesamos los resultados filtrando solo los que contengan "Dragon Ball" en el nombre
-     *   ya que la API devuelve resultados que pueden no ser exactos
-     */
-    private static void buscarSeriesDragonBall() throws Exception {
-        // Codificamos el query para URL (espacios = +)
-        String query = URLEncoder.encode("Dragon Ball", StandardCharsets.UTF_8);
-        String response = hacerPeticion("/search?query=" + query + "&type=series");
-
-        JsonObject json = gson.fromJson(response, JsonObject.class);
-        JsonArray data = json.getAsJsonArray("data");
-
-        int count = 0;
-        System.out.println("\nSeries que contienen 'Dragon Ball':");
-        System.out.println("-".repeat(50));
-
-        // Iteramos sobre todos los resultados
-        for (int i = 0; i < data.size(); i++) {
-            JsonObject serie = data.get(i).getAsJsonObject();
-            String nombre = serie.get("name").getAsString();
-
-            // Filtramos solo las que contengan "Dragon Ball" en el nombre
-            // (la API puede devolver resultados parciales)
-            if (nombre.toLowerCase().contains("dragon ball")) {
-                count++;
-                String year = serie.has("year") && !serie.get("year").isJsonNull()
-                        ? serie.get("year").getAsString() : "N/A";
-                System.out.printf("%d. %s (%s)%n", count, nombre, year);
-            }
+    private static boolean contieneTexto(String texto, String... palabras) {
+        if (texto == null) return false;
+        String lower = texto.toLowerCase();
+        for (String palabra : palabras) {
+            if (!lower.contains(palabra.toLowerCase())) return false;
         }
-        System.out.println("-".repeat(50));
-        System.out.println("TOTAL series Dragon Ball: " + count);
+        return true;
     }
 
-    /**
-     * PREGUNTA 2: URL del poster de la serie más antigua (1986)
-     *
-     * ENDPOINT USADO: GET /search?query=Dragon+Ball&type=series
-     *
-     * EXPLICACIÓN:
-     * - Buscamos en los resultados la serie que tenga nombre exacto "Dragon Ball" y año 1986
-     * - El campo image_url contiene la URL del poster
-     * - El tvdb_id es el identificador único de la serie en la plataforma
-     */
-    private static void obtenerPosterSerieAntigua() throws Exception {
-        // Reutilizamos el endpoint de búsqueda
-        String query = URLEncoder.encode("Dragon Ball", StandardCharsets.UTF_8);
-        String searchResponse = hacerPeticion("/search?query=" + query + "&type=series");
-
-        JsonObject searchJson = gson.fromJson(searchResponse, JsonObject.class);
-        JsonArray searchData = searchJson.getAsJsonArray("data");
-
-        String serieId = null;
-        String imageUrl = null;
-        String nombreSerie = null;
-        String yearSerie = null;
-
-        // Buscamos específicamente la serie de 1986 (la original)
-        for (int i = 0; i < searchData.size(); i++) {
-            JsonObject serie = searchData.get(i).getAsJsonObject();
-            String nombre = serie.has("name") && !serie.get("name").isJsonNull()
-                    ? serie.get("name").getAsString() : "";
-            String year = serie.has("year") && !serie.get("year").isJsonNull()
-                    ? serie.get("year").getAsString() : "";
-
-            // Buscamos coincidencia exacta: nombre "Dragon Ball" y año 1986
-            if (nombre.equals("Dragon Ball") && year.equals("1986")) {
-                serieId = serie.has("tvdb_id") && !serie.get("tvdb_id").isJsonNull()
-                        ? serie.get("tvdb_id").getAsString() : null;
-                imageUrl = serie.has("image_url") && !serie.get("image_url").isJsonNull()
-                        ? serie.get("image_url").getAsString() : "No disponible";
-                nombreSerie = nombre;
-                yearSerie = year;
-                break;
-            }
-        }
-
-        if (serieId != null) {
-            System.out.println("\nSerie: " + nombreSerie);
-            System.out.println("Año: " + yearSerie);
-            System.out.println("ID: " + serieId);
-            System.out.println("URL Poster: " + imageUrl);
-        } else {
-            System.out.println("No se encontró la serie Dragon Ball de 1986");
-        }
+    private static String getString(JsonObject obj, String key) {
+        if (obj == null || !obj.has(key) || obj.get(key).isJsonNull()) return null;
+        JsonElement el = obj.get(key);
+        return el.isJsonPrimitive() ? el.getAsString() : null;
     }
 
-    /**
-     * PREGUNTA 3: Primer episodio de la 3ª temporada (Saga del Ejército de la Patrulla Roja)
-     *
-     * ENDPOINT USADO: GET /series/{id}/episodes/default/spa?season=3
-     *
-     * EXPLICACIÓN:
-     * - Usamos el ID de la serie obtenido en la pregunta anterior
-     * - El parámetro "spa" indica que queremos las traducciones en español
-     * - El parámetro season=3 filtra por la temporada 3
-     * - "default" es el tipo de orden de episodios (orden por defecto de emisión)
-     */
-    private static void obtenerPrimerEpisodioTemporada3() throws Exception {
-        // Primero necesitamos obtener el ID de la serie Dragon Ball 1986
-        String query = URLEncoder.encode("Dragon Ball", StandardCharsets.UTF_8);
-        String searchResponse = hacerPeticion("/search?query=" + query + "&type=series");
-
-        JsonObject searchJson = gson.fromJson(searchResponse, JsonObject.class);
-        JsonArray searchData = searchJson.getAsJsonArray("data");
-
-        String serieId = null;
-
-        // Buscamos el ID de Dragon Ball 1986
-        for (int i = 0; i < searchData.size(); i++) {
-            JsonObject serie = searchData.get(i).getAsJsonObject();
-            String nombre = serie.has("name") && !serie.get("name").isJsonNull()
-                    ? serie.get("name").getAsString() : "";
-            String year = serie.has("year") && !serie.get("year").isJsonNull()
-                    ? serie.get("year").getAsString() : "";
-
-            if (nombre.equals("Dragon Ball") && year.equals("1986")) {
-                serieId = serie.has("tvdb_id") && !serie.get("tvdb_id").isJsonNull()
-                        ? serie.get("tvdb_id").getAsString() : null;
-                break;
+    private static Integer getInt(JsonObject obj, String key) {
+        if (obj == null || !obj.has(key) || obj.get(key).isJsonNull()) return null;
+        JsonElement el = obj.get(key);
+        if (el.isJsonPrimitive()) {
+            try {
+                return el.getAsInt();
+            } catch (NumberFormatException e) {
+                try {
+                    return Integer.parseInt(el.getAsString());
+                } catch (Exception ignored) {}
             }
         }
-
-        if (serieId == null) {
-            System.out.println("No se encontró el ID de la serie");
-            return;
-        }
-
-        // Ahora obtenemos los episodios de la temporada 3 en español
-        // Endpoint: /series/{id}/episodes/{season-type}/{lang}?season={num}
-        String response = hacerPeticion("/series/" + serieId + "/episodes/default/spa?season=3");
-
-        JsonObject json = gson.fromJson(response, JsonObject.class);
-
-        if (!json.has("data") || json.get("data").isJsonNull()) {
-            System.out.println("No se encontraron datos de episodios");
-            return;
-        }
-
-        JsonObject data = json.getAsJsonObject("data");
-
-        if (!data.has("episodes") || data.get("episodes").isJsonNull()) {
-            System.out.println("No hay episodios disponibles");
-            return;
-        }
-
-        JsonArray episodes = data.getAsJsonArray("episodes");
-
-        if (episodes != null && episodes.size() > 0) {
-            // El primer elemento del array es el primer episodio de la temporada
-            JsonObject primerEpisodio = episodes.get(0).getAsJsonObject();
-
-            String nombre = primerEpisodio.has("name") && !primerEpisodio.get("name").isJsonNull()
-                    ? primerEpisodio.get("name").getAsString() : "N/A";
-            String fecha = primerEpisodio.has("aired") && !primerEpisodio.get("aired").isJsonNull()
-                    ? primerEpisodio.get("aired").getAsString() : "N/A";
-            String descripcion = primerEpisodio.has("overview") && !primerEpisodio.get("overview").isJsonNull()
-                    ? primerEpisodio.get("overview").getAsString() : "Sin descripción";
-
-            System.out.println("\nPrimer episodio de la 3ª temporada (Saga Patrulla Roja):");
-            System.out.println("-".repeat(50));
-            System.out.println("Nombre: " + nombre);
-            System.out.println("Fecha emisión: " + fecha);
-            System.out.println("Descripción: " + descripcion);
-        } else {
-            System.out.println("No hay episodios en la temporada 3");
-        }
+        return null;
     }
 
-    /**
-     * PREGUNTA 4: Actor que hacía de Goku en "Dragonball Evolution" (2009)
-     *             y en cuántas películas/series ha participado
-     *
-     * ENDPOINTS USADOS:
-     * 1. GET /search?query=Dragonball+Evolution&type=movie  -> Buscar la película
-     * 2. GET /movies/{id}/extended                          -> Obtener detalles con personajes
-     * 3. GET /people/{id}/extended                          -> Obtener filmografía del actor
-     *
-     * EXPLICACIÓN:
-     * - Primero buscamos la película para obtener su ID
-     * - Con el ID obtenemos los detalles extendidos que incluyen el cast (personajes)
-     * - Buscamos el personaje "Goku" y obtenemos el peopleId del actor
-     * - Con el peopleId consultamos los detalles del actor para ver sus participaciones
-     */
-    private static void buscarActorGoku() throws Exception {
-        // PASO 1: Buscar la película "Dragonball Evolution"
-        String query = URLEncoder.encode("Dragonball Evolution", StandardCharsets.UTF_8);
-        String searchResponse = hacerPeticion("/search?query=" + query + "&type=movie");
-
-        JsonObject searchJson = gson.fromJson(searchResponse, JsonObject.class);
-        JsonArray searchData = searchJson.getAsJsonArray("data");
-
-        String movieId = null;
-
-        // Buscamos la película de 2009
-        for (int i = 0; i < searchData.size(); i++) {
-            JsonObject movie = searchData.get(i).getAsJsonObject();
-            String nombre = movie.has("name") && !movie.get("name").isJsonNull()
-                    ? movie.get("name").getAsString() : "";
-            String year = movie.has("year") && !movie.get("year").isJsonNull()
-                    ? movie.get("year").getAsString() : "";
-
-            if (nombre.toLowerCase().contains("dragonball") && year.equals("2009")) {
-                movieId = movie.has("tvdb_id") && !movie.get("tvdb_id").isJsonNull()
-                        ? movie.get("tvdb_id").getAsString() : null;
-                System.out.println("Película encontrada: " + nombre + " (" + year + ")");
-                System.out.println("ID: " + movieId);
-                break;
-            }
-        }
-
-        if (movieId == null) {
-            System.out.println("No se encontró Dragonball Evolution");
-            return;
-        }
-
-        // PASO 2: Obtener detalles extendidos (incluye cast/personajes)
-        String responseMovie = hacerPeticion("/movies/" + movieId + "/extended");
-        JsonObject json = gson.fromJson(responseMovie, JsonObject.class);
-
-        if (!json.has("data") || json.get("data").isJsonNull()) {
-            System.out.println("No se encontraron datos de la película");
-            return;
-        }
-
-        JsonObject data = json.getAsJsonObject("data");
-        String peliculaNombre = data.has("name") && !data.get("name").isJsonNull()
-                ? data.get("name").getAsString() : "N/A";
-        System.out.println("\nPelícula: " + peliculaNombre);
-
-        // PASO 3: Buscar al actor que interpreta a Goku
-        if (data.has("characters") && !data.get("characters").isJsonNull()) {
-            JsonArray characters = data.getAsJsonArray("characters");
-
-            for (int i = 0; i < characters.size(); i++) {
-                JsonObject character = characters.get(i).getAsJsonObject();
-                String charName = character.has("name") && !character.get("name").isJsonNull()
-                        ? character.get("name").getAsString() : "";
-
-                // Buscamos el personaje Goku
-                if (charName.toLowerCase().contains("goku")) {
-                    String actorName = character.has("personName") && !character.get("personName").isJsonNull()
-                            ? character.get("personName").getAsString() : "N/A";
-                    long personId = character.has("peopleId") && !character.get("peopleId").isJsonNull()
-                            ? character.get("peopleId").getAsLong() : 0;
-
-                    System.out.println("-".repeat(50));
-                    System.out.println("Personaje: " + charName);
-                    System.out.println("Actor: " + actorName);
-
-                    // PASO 4: Obtener filmografía del actor
-                    if (personId > 0) {
-                        String responsePeople = hacerPeticion("/people/" + personId + "/extended");
-                        JsonObject personJson = gson.fromJson(responsePeople, JsonObject.class);
-
-                        if (personJson.has("data") && !personJson.get("data").isJsonNull()) {
-                            JsonObject personData = personJson.getAsJsonObject("data");
-
-                            // El array "characters" contiene todas sus participaciones
-                            int totalParticipaciones = 0;
-                            if (personData.has("characters") && !personData.get("characters").isJsonNull()) {
-                                totalParticipaciones = personData.getAsJsonArray("characters").size();
-                            }
-                            System.out.println("Participaciones en películas/series: " + totalParticipaciones);
-                        }
-                    }break;
-                }
-            }
-        } else {
-            System.out.println("No hay información de personajes disponible");
-        }
+    private static String encode(String s) {
+        return URLEncoder.encode(s, StandardCharsets.UTF_8);
     }
 
-    /**
-     * PREGUNTA 5: Mejor película USA 2009 valorada (mejor score)
-     *
-     * ENDPOINT USADO: GET /movies/filter?country=usa&year=2009&sort=score&sortType=desc
-     *
-     * EXPLICACIÓN:
-     * - Usamos el endpoint de filtrado de películas /movies/filter
-     * - Parámetros:
-     *   - country=usa: Filtra por país de origen USA
-     *   - year=2009: Filtra por año de estreno 2009
-     *   - sort=score: Ordena por puntuación
-     *   - sortType=desc: Orden descendente (mejor valorada primero)
-     * - La primera película del resultado será la mejor valorada
-     *
-     * NOTA: El enunciado menciona que hay 2403 películas USA de 2009.
-     *       El actor de la pregunta 4 participó en "La guerra de los mundos"
-     *       junto con Tom Cruise (aunque esa película es de 2005, no 2009)
-     */
-    private static void buscarMejorPeliculaUSA2009() throws Exception {
-        // Endpoint con filtros: país, año, ordenación por score descendente
-        String response = hacerPeticion("/movies/filter?country=usa&year=2009&sort=score&sortType=desc");
-
-        JsonObject json = gson.fromJson(response, JsonObject.class);
-        JsonArray data = json.getAsJsonArray("data");
-
-        if (data != null && data.size() > 0) {
-            // La primera película es la mejor valorada (ordenación descendente)
-            JsonObject mejorPelicula = data.get(0).getAsJsonObject();
-
-            String nombre = mejorPelicula.has("name") && !mejorPelicula.get("name").isJsonNull()
-                    ? mejorPelicula.get("name").getAsString() : "N/A";
-            String score = mejorPelicula.has("score") && !mejorPelicula.get("score").isJsonNull()
-                    ? mejorPelicula.get("score").getAsString() : "N/A";
-            String id = mejorPelicula.has("id") && !mejorPelicula.get("id").isJsonNull()
-                    ? mejorPelicula.get("id").getAsString() : "N/A";
-
-            System.out.println("\nMejor película USA 2009 (por score):");
-            System.out.println("-".repeat(50));
-            System.out.println("ID: " + id);
-            System.out.println("Nombre: " + nombre);
-            System.out.println("Score: " + score);
-        } else {
-            System.out.println("No se encontraron películas USA de 2009");
-        }
+    private static String valorODefault(String valor) {
+        return valor != null ? valor : "No disponible";
     }
 }
