@@ -7,19 +7,19 @@
 </head>
 <body>
 <div class="container">
-    <header><h1>Biblioteca de Jueg<a th:href="@{/847}" style="color:inherit;text-decoration:none">o</a>s</h1></header>
-
-
-    <nav class="platforms-nav">
-        <a th:href="@{/}" th:classappend="${selectedPlatform == null} ? 'active' : ''">Todos</a>
-        <span th:each="p : ${platforms}">
+    <header>
+        <h1>Biblioteca de Jueg<a th:href="@{/847}" style="color:inherit;text-decoration:none">o</a>s</h1>
+        <nav class="header-nav">
+            <span>Plataformas:</span>
+            <a th:href="@{/}" th:classappend="${selectedPlatform == null} ? 'active' : ''">Todos</a>
+            <span th:each="p : ${platforms}">
                 | <a th:href="@{/(platform=${p})}" th:text="${p}" th:classappend="${selectedPlatform == p} ? 'active' : ''"></a>
             </span>
-    </nav>
+        </nav>
+    </header>
 
     <main>
         <h2 th:if="${selectedPlatform != null}" th:text="${selectedPlatform}"></h2>
-
         <div class="games-grid">
             <a th:each="g : ${games}" th:href="@{'/juego/'+${g.id}}" class="game-card">
                 <img th:src="@{'https://picsum.photos/seed/'+${g.id}+'/200/150'}" alt="Game image">
@@ -35,5 +35,8 @@
         <p>Realizado por Daniel</p>
     </footer>
 </div>
+
+<a th:href="@{/nuevo}" class="fab-button">+</a>
+<script th:src="@{/js/header.js}"></script>
 </body>
 </html>

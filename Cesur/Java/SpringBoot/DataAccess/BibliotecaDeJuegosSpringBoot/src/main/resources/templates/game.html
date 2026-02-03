@@ -8,15 +8,17 @@
 <body>
 <div class="container">
     <header>
-        <h1>Biblioteca de Juegos</h1>
-    </header>
-
-    <nav class="platforms-nav">
-        <a th:href="@{/}">Todos</a>
-        <span th:each="p : ${platforms}">
+        <div class="header-top">
+            <h1>Biblioteca de Juegos</h1>
+            <a th:href="@{/nuevo}" class="btn btn-small">+ Añadir</a>
+        </div>
+        <nav class="header-nav">
+            <a th:href="@{/}">Todos</a>
+            <span th:each="p : ${platforms}">
                 | <a th:href="@{/(platform=${p})}" th:text="${p}"></a>
             </span>
-    </nav>
+        </nav>
+    </header>
 
     <main class="game-detail">
         <div class="detail-content">
@@ -26,15 +28,22 @@
                 <p class="platform" th:text="${game.platform}"></p>
                 <p class="year" th:text="${game.year}"></p>
             </div>
+        </div><div class="description-box">
+        <p th:text="${game.description}"></p>
+    </div>
+        <div class="form-buttons">
+            <a th:href="@{/}" class="btn">Volver</a>
+            <a th:href="@{'/juego/' + ${game.id} + '/editar'}" class="btn">Editar</a>
+            <form th:action="@{'/juego/' + ${game.id} + '/eliminar'}" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-danger" onclick="return confirm('¿Eliminar este juego?')">Eliminar</button>
+            </form>
         </div>
-        <div class="description-box">
-            <p th:text="${game.description}"></p>
-        </div><a href="/" class="btn-volver">Volver</a>
     </main>
 
     <footer>
         <p>Realizado por Daniel</p>
     </footer>
 </div>
+<script src="/js/header.js"></script>
 </body>
 </html>
