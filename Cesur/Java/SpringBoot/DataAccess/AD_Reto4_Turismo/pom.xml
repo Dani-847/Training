@@ -10,9 +10,9 @@
     </parent>
     <groupId>org.drk</groupId>
     <artifactId>Reto4_AD_TURISMO</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1</version>
     <name>Reto4_AD_TURISMO</name>
-    <description>Reto4_AD_TURISMO</description>
+    <description>Api REST con hoteles</description>
     <url/>
     <licenses>
         <license/>

@@ -2,7 +2,7 @@ FROM eclipse-temurin:17-jdk-jammy
 
 WORKDIR /app
 
-COPY target/*.jar app.jar
+COPY target/Reto4_AD_TURISMO-0.1.jar app.jar
 
 EXPOSE 8080
 
