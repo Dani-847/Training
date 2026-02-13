@@ -11,10 +11,3 @@ public class Reto4AdTurismoApplication {
     }
 
 }
-
-
-/*NOTAS
-[CREDENTIAL REMOVED FOR SECURITY] A MongoDB Atlas connection URI (with username and password) used to be here. Third parties: it is not available. Owner: retrieve it from MongoDB Atlas > Cluster0 > Connect and provide it through the MONGODB_URI environment variable.
-
-
- */
