@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${item.title} + ' - Tienda'">Item Detalles</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+
+    <header>
+        <div class="header-top">
+            <h1>Tienda &mdash; Items</h1>
+        </div>
+        <nav class="header-nav">
+            <a th:href="@{/items}">&#8592; Todos los items</a>
+        </nav>
+    </header>
+
+    <div class="breadcrumb">
+        <a th:href="@{/items}">Items</a>
+        <span class="sep">/</span>
+        <span th:text="${item.category != null ? item.category : 'General'}">Categoría</span>
+        <span class="sep">/</span>
+        <span th:text="${item.title}">Título del Item</span>
+    </div>
+
+    <div th:if="${mensajeExito}" class="alert alert-success" th:text="${mensajeExito}"></div>
+
+    <main class="game-detail">
+
+        <!-- Cabecera con datos principales -->
+        <div class="detail-content">
+            <!-- Columna lateral: Imagen y Precio -->
+            <div class="hotel-card-thumb" style="width:200px; min-width:200px; height:220px; border-radius:8px; flex-direction:column; gap:10px; justify-content: center; align-items: center; background-color: #fff; border: 1px solid #ddd;">
+
+                <!-- Imagen del producto -->
+                <img th:if="${item.image != null and !#strings.isEmpty(item.image)}"
+                     th:src="${item.image}"
+                     alt="Imagen Item"
+                     style="max-width: 90%; max-height: 120px; object-fit: contain;">
+
+                <!-- Icono fallback si no hay imagen -->
+                <span th:if="${item.image == null or #strings.isEmpty(item.image)}" style="font-size: 4rem;">📦</span>
+
+                <!-- Precio destacado -->
+                <span style="font-size: 1.5rem; font-weight: bold; color: #e67e22;"
+                      th:text="${item.price} + ' €'">0.0 €</span>
+            </div>
+
+            <!-- Columna de Información -->
+            <div class="detail-info">
+                <h2 th:text="${item.title}">Título del producto</h2>
+
+                <div style="margin-bottom: 15px; color: #f39c12; font-size: 1.1rem;">
+                    <span th:if="${item.rate != null}">
+                        <span th:text="'★ ' + ${item.rate}"></span> <span style="color: #777; font-size: 0.9rem;">/ 10</span>
+                    </span>
+                    <span th:if="${item.rate == null}" style="color: #ccc;">Sin valoración</span>
+                </div>
+
+                <p class="detail-meta" th:if="${item.manufacturer != null}">
+                    Fabricante: <strong th:text="${item.manufacturer}"></strong>
+                </p>
+                <p class="detail-meta" th:if="${item.category != null}">
+                    Categoría: <strong th:text="${item.category}"></strong>
+                </p>
+                <p class="detail-meta" th:if="${item.color != null}">
+                    Color: <span th:text="${item.color}"></span>
+                </p>
+
+                <hr style="border: 0; border-top: 1px solid #eee; margin: 10px 0;">
+
+                <p class="detail-meta" th:if="${item.ean != null}">
+                    EAN: <span th:text="${item.ean}" style="font-family: monospace;"></span>
+                </p>
+                <p class="detail-meta" th:if="${item.itemId != null}">
+                    ID Interno: <span th:text="${item.itemId}"></span>
+                </p>
+                <p class="detail-meta" th:if="${item.count != null}">
+                    Ventas totales: <span th:text="${item.count}"></span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Descripción Completa -->
+        <div th:if="${item.description != null and !#strings.isEmpty(item.description)}"
+             class="description-box" style="margin-top: 20px;">
+            <p class="detail-label">Descripción del producto</p>
+            <!-- utext interpreta HTML si la descripción lo contiene -->
+            <div th:utext="${item.description}"></div>
+        </div>
+
+        <!-- Botones de Acción -->
+        <div class="form-buttons" style="margin-top: 30px;">
+            <a th:href="@{/items}" class="btn">Volver al listado</a>
+
+            <!-- Acciones de Administrador -->
+            <a sec:authorize="hasRole('ADMIN')"
+               th:href="@{/items/{id}/editar(id=${item._id})}"
+               class="btn">Editar Item</a>
+
+            <form sec:authorize="hasRole('ADMIN')"
+                  th:action="@{/items/{id}/eliminar(id=${item._id})}"
+                  method="post" style="display:inline;"
+                  onsubmit="return confirm('¿Estás seguro de que deseas eliminar este item permanentemente?')">
+                <button type="submit" class="btn btn-danger">Eliminar</button>
+            </form>
+        </div>
+
+    </main>
+
+    <footer><p>Tienda Web App &mdash; Spring Boot MVC + MongoDB</p></footer>
+</div>
+<script th:src="@{/js/header.js}"></script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Error - Tienda</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>Tienda &mdash; Items</h1>
+        <nav class="header-nav">
+            <a th:href="@{/items}">&#8592; Volver al inicio</a>
+        </nav>
+    </header>
+    <main>
+        <div class="description-box">
+            <h2>Error</h2>
+            <p th:text="${mensaje != null ? mensaje : (message != null ? message : 'El recurso solicitado no existe.')}"></p>
+        </div>
+        <div class="form-buttons">
+            <a th:href="@{/items}" class="btn">Volver al listado</a>
+        </div>
+    </main>
+    <footer><p>Tienda Web App &mdash; Spring Boot MVC + MongoDB</p></footer>
+</div>
+</body>
+</html>
