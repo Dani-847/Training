@@ -1,3 +1,4 @@
+<!-- src/main/resources/templates/item.html -->
 <!DOCTYPE html>
 <html lang="es"
       xmlns:th="http://www.thymeleaf.org"
@@ -13,6 +14,12 @@
     <header>
         <div class="header-top">
             <h1>Tienda &mdash; Items</h1>
+            <!-- Agrego sección auth para consistencia, aunque no estaba en tu snippet original de item.html -->
+            <div class="auth-section">
+                <span sec:authorize="isAuthenticated()">
+                    <span sec:authentication="name">Usuario</span>
+                </span>
+            </div>
         </div>
         <nav class="header-nav">
             <a th:href="@{/items}">&#8592; Todos los items</a>
@@ -89,7 +96,6 @@
         <div th:if="${item.description != null and !#strings.isEmpty(item.description)}"
              class="description-box" style="margin-top: 20px;">
             <p class="detail-label">Descripción del producto</p>
-            <!-- utext interpreta HTML si la descripción lo contiene -->
             <div th:utext="${item.description}"></div>
         </div>
 
@@ -97,11 +103,11 @@
         <div class="form-buttons" style="margin-top: 30px;">
             <a th:href="@{/items}" class="btn">Volver al listado</a>
 
-            <!-- Acciones de Administrador -->
-            <a sec:authorize="hasRole('ADMIN')"
-               th:href="@{/items/{id}/editar(id=${item._id})}"
+            <!-- CAMBIO: Botón Editar ahora visible para TODOS (se ha eliminado sec:authorize) -->
+            <a th:href="@{/items/{id}/editar(id=${item._id})}"
                class="btn">Editar Item</a>
 
+            <!-- Botón Eliminar sigue restringido solo para ADMIN -->
             <form sec:authorize="hasRole('ADMIN')"
                   th:action="@{/items/{id}/eliminar(id=${item._id})}"
                   method="post" style="display:inline;"
