@@ -14,7 +14,6 @@
     <header>
         <div class="header-top">
             <h1>Tienda &mdash; Items</h1>
-            <!-- Agrego sección auth para consistencia, aunque no estaba en tu snippet original de item.html -->
             <div class="auth-section">
                 <span sec:authorize="isAuthenticated()">
                     <span sec:authentication="name">Usuario</span>
@@ -103,11 +102,9 @@
         <div class="form-buttons" style="margin-top: 30px;">
             <a th:href="@{/items}" class="btn">Volver al listado</a>
 
-            <!-- CAMBIO: Botón Editar ahora visible para TODOS (se ha eliminado sec:authorize) -->
             <a th:href="@{/items/{id}/editar(id=${item._id})}"
                class="btn">Editar Item</a>
 
-            <!-- Botón Eliminar sigue restringido solo para ADMIN -->
             <form sec:authorize="hasRole('ADMIN')"
                   th:action="@{/items/{id}/eliminar(id=${item._id})}"
                   method="post" style="display:inline;"
