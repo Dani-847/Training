@@ -115,3 +115,41 @@
     </pluginRepositories>
 
 </project>
+#include <SoftwareSerial.h>
+
+SoftwareSerial cdd4(10, 11);
+
+void setup() {
+  cdd4.begin(9600);
+}
+
+void loop() {
+  if (cdd4.available()) {
+    byte b1 = cdd4.read();
+    
+    if (b1 == 0x55) {
+      // Esperar los 4 bytes restantes
+      while (cdd4.available() < 4);
+      byte b2 = cdd4.read();
+      byte b3 = cdd4.read();
+      byte b4 = cdd4.read();
+      byte b5 = cdd4.read();
+      
+      // Modificar b2: mantener nivel PAS pero poner velocidad máxima
+      // El nibble alto es el nivel PAS, el bajo lo ponemos a 0xF (máximo)
+      byte nivelPAS = (b2 & 0xF0);
+      b2 = nivelPAS | 0x0F;
+      
+      // Recalcular checksum
+      b5 = b1 + b2 + b3 + b4;
+      
+      // Reenviar trama modificada
+      cdd4.write(b1);
+      cdd4.write(b2);
+      cdd4.write(b3);
+      cdd4.write(b4);
+      cdd4.write(b5);
+    }
+  }
+}
+
