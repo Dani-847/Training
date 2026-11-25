@@ -113,6 +113,7 @@ Film posters in these apps were replaced by a neutral placeholder with the same 
 
 The only C# project: **Pizzard**, a game made with Unity 2022.3 for the cross-module project (*Proyecto Intermodular*), under the MIT licence.
 It has its own README and planning documents. ✱
+Two commercial songs that were used as placeholder music were removed for copyright reasons. The scenes that used them now have empty audio clips.
 
 ## Docker
 
