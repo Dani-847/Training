@@ -1,0 +1,60 @@
+# --- Java / Maven / Gradle ---
+target/
+build/
+out/
+*.class
+.gradle/
+.kotlin/
+.mvn/
+mvnw
+mvnw.cmd
+gradlew
+gradlew.bat
+gradle-wrapper.jar
+local.properties
+
+# --- Android ---
+.cxx/
+.externalNativeBuild/
+captures/
+*.apk
+*.aab
+*.jks
+*.keystore
+
+# --- IDE (only project-specific files are versioned: dataSources.xml and the
+#     project structure of projects that have no Maven/Gradle build) ---
+.idea/workspace.xml
+.idea/copilot*
+.idea/shelf/
+.vscode/
+
+# --- Unity ---
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+[Bb]uild/
+[Bb]uilds/
+*.csproj
+*.sln
+.plastic/
+
+# --- C++ / CMake ---
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+*.exe
+*.o
+*.obj
+
+# --- Secrets ---
+.env
+*.env
+secrets.properties
+
+# --- OS ---
+desktop.ini
+Thumbs.db
+.DS_Store
