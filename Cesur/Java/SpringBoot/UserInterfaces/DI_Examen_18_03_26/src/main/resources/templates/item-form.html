@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${modoEdicion} ? 'Editar Item - Tienda' : 'Nuevo Item - Tienda'">Formulario</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+
+    <header>
+        <div class="header-top">
+            <h1>Tienda &mdash; Gestión de Items</h1>
+            <!-- Sección de autenticación -->
+            <div class="auth-section">
+                <span sec:authorize="isAuthenticated()">
+                    <span sec:authentication="name">Usuario</span>
+                    <span sec:authorize="hasRole('ADMIN')" class="badge-admin">ADMIN</span>
+                </span>
+                <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-small">Salir</button>
+                </form>
+            </div>
+        </div>
+        <nav class="header-nav">
+            <a th:href="@{/items}">&#8592; Todos los items</a>
+            <span th:if="${modoEdicion}">
+                | <a th:href="@{/items/{id}(id=${item._id})}" th:text="${item.title}"></a>
+            </span>
+        </nav>
+    </header>
+
+    <main>
+        <h2 th:text="${modoEdicion} ? 'Editar Item' : 'Nuevo Item'">Formulario</h2>
+
+        <!-- El th:object="${item}" permite usar *{campo} para vincular inputs automáticamente -->
+        <form th:action="${modoEdicion} ? @{/items/{id}/editar(id=${item._id})} : @{/items/nuevo}"
+              th:object="${item}"
+              method="post" class="hotel-form">
+
+            <!-- Sección 1: Datos Principales -->
+            <p class="form-section-title">Información Principal</p>
+
+            <div class="form-row">
+                <div class="form-col" style="flex:2">
+                    <label for="title">Título / Nombre *</label>
+                    <input type="text" id="title" th:field="*{title}" placeholder="Nombre del producto" required>
+                </div>
+                <div class="form-col">
+                    <label for="manufacturer">Fabricante</label>
+                    <input type="text" id="manufacturer" th:field="*{manufacturer}" placeholder="Marca">
+                </div>
+                <div class="form-col">
+                    <label for="category">Categoría</label>
+                    <input type="text" id="category" th:field="*{category}" placeholder="Ej: Electrónica">
+                </div>
+            </div>
+
+            <!-- Sección 2: Identificación y Características -->
+            <div class="form-row">
+                <div class="form-col">
+                    <label for="itemId">ID Interno</label>
+                    <input type="number" id="itemId" th:field="*{itemId}" placeholder="Ej: 1">
+                </div>
+                <div class="form-col" style="flex:2">
+                    <label for="ean">Código EAN</label>
+                    <input type="text" id="ean" th:field="*{ean}" placeholder="Código de barras">
+                </div>
+                <div class="form-col">
+                    <label for="color">Color</label>
+                    <input type="text" id="color" th:field="*{color}" placeholder="Ej: Rojo">
+                </div>
+            </div>
+
+            <!-- Sección 3: Precio y Estadísticas -->
+            <p class="form-section-title">Precio y Stock</p>
+
+            <div class="form-row">
+                <div class="form-col">
+                    <label for="price">Precio (€)</label>
+                    <input type="number" step="0.01" id="price" th:field="*{price}" placeholder="0.00">
+                </div>
+                <div class="form-col">
+                    <label for="count">Ventas Totales / Stock</label>
+                    <input type="number" id="count" th:field="*{count}" placeholder="0">
+                </div>
+                <div class="form-col">
+                    <label for="rate">Valoración (0-10)</label>
+                    <input type="number" step="0.1" max="10" id="rate" th:field="*{rate}" placeholder="Ej: 8.5">
+                </div>
+            </div>
+
+            <!-- Sección 4: Descripción y Multimedia -->
+            <p class="form-section-title">Detalles Extra</p>
+
+            <div class="form-row">
+                <div class="form-col" style="width: 100%;">
+                    <label for="image">URL Imagen</label>
+                    <input type="url" id="image" th:field="*{image}" placeholder="https://ejemplo.com/imagen.jpg">
+                </div>
+            </div>
+
+            <div>
+                <label for="description">Descripción</label>
+                <textarea id="description" th:field="*{description}"
+                          placeholder="Descripción detallada del producto (acepta HTML básico)..." rows="6"></textarea>
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="form-buttons">
+                <!-- Cancelar redirige al detalle si es edición, o a la lista si es nuevo -->
+                <a th:href="${modoEdicion} ? @{/items/{id}(id=${item._id})} : @{/items}"
+                   class="btn">Cancelar</a>
+
+                <button type="submit" class="btn">
+                    <span th:text="${modoEdicion} ? 'Guardar Cambios' : 'Crear Item'"></span>
+                </button>
+            </div>
+
+        </form>
+    </main>
+
+    <footer><p>Tienda Web App &mdash; Spring Boot MVC + MongoDB</p></footer>
+</div>
+<script th:src="@{/js/header.js}"></script>
+</body>
+</html>

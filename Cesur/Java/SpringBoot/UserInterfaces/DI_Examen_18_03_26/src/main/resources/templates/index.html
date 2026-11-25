@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tienda - Items</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+
+    <header>
+        <div class="header-top">
+            <h1>Tienda &mdash; Items</h1>
+        </div>
+        <nav class="header-nav">
+            <!-- Formulario de búsqueda -->
+            <form th:action="@{/items}" method="get" style="display:inline;">
+                <input class="filter-input" name="buscar" th:value="${buscar}" placeholder="Nombre del item..." style="width: 200px;">
+                <button type="submit" class="btn btn-small">Buscar</button>
+            </form>
+            &nbsp;|&nbsp;
+            <!-- Enlaces de navegación rápida -->
+            <a th:href="@{/items}" th:classappend="${buscar == null} ? 'active' : ''">Todos</a>
+        </nav>
+    </header>
+
+    <!-- Mensajes flash (Éxito / Error) -->
+    <div th:if="${mensajeExito}" class="alert alert-success" th:text="${mensajeExito}"></div>
+    <div th:if="${mensajeError}"  class="alert alert-error"   th:text="${mensajeError}"></div>
+
+    <!-- Estadísticas adaptadas a StoreStatsDTO -->
+    <div th:if="${stats}" class="stats-bar">
+        <div class="stat-item">
+            <span class="stat-number" th:text="${stats.totalItems}">0</span>
+            <span class="stat-label">Total Items</span>
+        </div>
+        <div class="stat-item">
+            <!-- Si stats.lowStockItems es una lista, mostramos el tamaño -->
+            <span class="stat-number" th:text="${stats.lowStockItems != null ? stats.lowStockItems.size() : 0}">0</span>
+            <span class="stat-label">Stock Bajo</span>
+        </div>
+        <div class="stat-item">
+            <!-- Si stats.manufacturers es una lista, mostramos el tamaño -->
+            <span class="stat-number" th:text="${stats.manufacturers != null ? stats.manufacturers.size() : 0}">0</span>
+            <span class="stat-label">Fabricantes</span>
+        </div>
+    </div>
+
+    <main>
+        <!-- Bloque de "Sin resultados" -->
+        <div th:if="${items.isEmpty()}" class="description-box" style="text-align:center">
+            <p style="font-size:1.1rem;">No se encontraron items en la tienda.</p>
+            <a th:href="@{/items}" class="btn" style="margin-top:10px">Ver todos</a>
+        </div>
+
+        <!-- Grid de Items -->
+        <div th:unless="${items.isEmpty()}" class="games-grid">
+            <a th:each="i : ${items}"
+               th:href="@{/items/{id}(id=${i._id})}"
+               class="hotel-card"> <!-- Reutilizamos clase hotel-card para mantener estilo CSS -->
+
+                <div class="hotel-card-thumb" style="flex-direction: column; justify-content: center; gap: 5px;">
+                    <!-- Si hay imagen externa -->
+                    <img th:if="${i.image != null and !#strings.isEmpty(i.image)}"
+                         th:src="${i.image}" alt="Imagen del producto"
+                         style="max-width: 80%; max-height: 80px; object-fit: contain;">
+
+                    <!-- Icono por defecto si no hay imagen -->
+                    <span th:if="${i.image == null or #strings.isEmpty(i.image)}" style="font-size: 2rem;">📦</span>
+
+                    <!-- Precio destacado -->
+                    <span style="font-size: 1.1rem; font-weight: bold; color: #333;"
+                          th:text="${i.price} + ' €'">0.0 €</span>
+                </div>
+
+                <div class="game-info">
+                    <!-- Título del Item -->
+                    <h3 class="hotel-name" th:text="${i.title}">Título Item</h3>
+
+                    <p class="hotel-location">
+                        <!-- Categoría y Fabricante -->
+                        <span th:if="${i.category != null}" th:text="${i.category}" style="font-weight: bold;">Cat</span>
+                        <span th:if="${i.category != null and i.manufacturer != null}"> | </span>
+                        <span th:if="${i.manufacturer != null}" th:text="${i.manufacturer}">Fab</span>
+                    </p>
+
+                    <!-- Rating (Estrellas simple basado en rate numérico) -->
+                    <div style="margin-top: 5px; color: #f39c12;">
+                        <span th:if="${i.rate != null}" th:text="'★ ' + ${i.rate}"></span>
+                        <span th:if="${i.rate == null}" style="color: #ccc;">Sin valoración</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </main>
+
+    <footer>
+        <p>Tienda Web App &mdash; Spring Boot MVC + MongoDB</p>
+    </footer>
+
+</div>
+
+<!-- FAB (Botón flotante) solo para ADMIN para crear NUEVO ITEM -->
+<a sec:authorize="hasRole('ADMIN')" th:href="@{/items/nuevo}" class="fab-button" title="Crear Nuevo Item">+</a>
+
+<script th:src="@{/js/header.js}"></script>
+</body>
+</html>
