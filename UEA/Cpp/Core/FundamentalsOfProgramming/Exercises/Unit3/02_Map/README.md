@@ -8,7 +8,7 @@
 
 Véase directamente el código de ejemplo en el listado de soluciones de esta Unidad.
 
-> El enunciado del campus remite a un código de ejemplo que no está en el material. `proposed_solution.cpp` se basa en el ejemplo del PDF `1_temario/unidad_3 (no entra en examen)/01_map.pdf`.
+> El enunciado del campus remite a un código de ejemplo que no está en el material. `proposed_solution.cpp` se basa en el ejemplo del PDF de la unidad 3 del profesor (`01_map.pdf`, no incluido en este repositorio).
 
 ## Solución
 

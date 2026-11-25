@@ -15,7 +15,8 @@ Descripción breve del proyecto (puedes completarla según el objetivo de tu apl
 ### 1. Clonar el repositorio
 
 ```bash
-git clone https://github.com/Dani-847/Reto2DI-AD.git
+git clone https://github.com/Dani-847/Training.git
+cd Training/Cesur/Java/JavaFX/DataAccess_UserInterfaces_Challenges/Reto2_DI-AD_Hibernate
 ```
 
 ### 2. Configurar variables de entorno
