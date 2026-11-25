@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">AppProyectPM</string>
+    <string name="nueva_fruta">Nueva fruta</string>
+    <string name="limpiar">Limpiar</string>
+    <string name="fruta">Fruta</string>
+    <string name="descripcion">Descripcion</string>
+    <string name="precio">Precio</string>
+    <string name="origen">Origen</string>
+    <string name="temporada">Temporada</string>
+    <string name="color">Color</string>
+    <string name="volver">Volver</string>
+    <string name="valor_nutricional">Valor nutricional</string>
+</resources>

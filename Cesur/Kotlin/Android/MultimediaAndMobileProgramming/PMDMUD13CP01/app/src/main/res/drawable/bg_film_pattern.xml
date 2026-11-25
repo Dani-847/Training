@@ -1,0 +1,56 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="400dp"
+    android:height="400dp"
+    android:viewportWidth="400"
+    android:viewportHeight="400">
+
+    <!-- Film strip 1 - diagonal top-left to center -->
+    <group android:rotation="-30"
+        android:pivotX="100"
+        android:pivotY="200">
+        <path
+            android:fillColor="#E0E0E0"
+            android:pathData="M40,50 L80,50 L80,400 L40,400 Z"/>
+        <!-- Film holes left -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M45,60 L55,60 L55,75 L45,75 Z M45,90 L55,90 L55,105 L45,105 Z M45,120 L55,120 L55,135 L45,135 Z M45,150 L55,150 L55,165 L45,165 Z M45,180 L55,180 L55,195 L45,195 Z M45,210 L55,210 L55,225 L45,225 Z M45,240 L55,240 L55,255 L45,255 Z M45,270 L55,270 L55,285 L45,285 Z M45,300 L55,300 L55,315 L45,315 Z M45,330 L55,330 L55,345 L45,345 Z M45,360 L55,360 L55,375 L45,375 Z"/>
+        <!-- Film holes right -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M65,60 L75,60 L75,75 L65,75 Z M65,90 L75,90 L75,105 L65,105 Z M65,120 L75,120 L75,135 L65,135 Z M65,150 L75,150 L75,165 L65,165 Z M65,180 L75,180 L75,195 L65,195 Z M65,210 L75,210 L75,225 L65,225 Z M65,240 L75,240 L75,255 L65,255 Z M65,270 L75,270 L75,285 L65,285 Z M65,300 L75,300 L75,315 L65,315 Z M65,330 L75,330 L75,345 L65,345 Z M65,360 L75,360 L75,375 L65,375 Z"/>
+    </group>
+
+    <!-- Film strip 2 - diagonal center -->
+    <group android:rotation="25"
+        android:pivotX="250"
+        android:pivotY="200">
+        <path
+            android:fillColor="#E0E0E0"
+            android:pathData="M230,0 L270,0 L270,450 L230,450 Z"/>
+        <!-- Film holes left -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M235,10 L245,10 L245,25 L235,25 Z M235,40 L245,40 L245,55 L235,55 Z M235,70 L245,70 L245,85 L235,85 Z M235,100 L245,100 L245,115 L235,115 Z M235,130 L245,130 L245,145 L235,145 Z M235,160 L245,160 L245,175 L235,175 Z M235,190 L245,190 L245,205 L235,205 Z M235,220 L245,220 L245,235 L235,235 Z M235,250 L245,250 L245,265 L235,265 Z M235,280 L245,280 L245,295 L235,295 Z M235,310 L245,310 L245,325 L235,325 Z M235,340 L245,340 L245,355 L235,355 Z M235,370 L245,370 L245,385 L235,385 Z M235,400 L245,400 L245,415 L235,415 Z M235,430 L245,430 L245,445 L235,445 Z"/>
+        <!-- Film holes right -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M255,10 L265,10 L265,25 L255,25 Z M255,40 L265,40 L265,55 L255,55 Z M255,70 L265,70 L265,85 L255,85 Z M255,100 L265,100 L265,115 L255,115 Z M255,130 L265,130 L265,145 L255,145 Z M255,160 L265,160 L265,175 L255,175 Z M255,190 L265,190 L265,205 L255,205 Z M255,220 L265,220 L265,235 L255,235 Z M255,250 L265,250 L265,265 L255,265 Z M255,280 L265,280 L265,295 L255,295 Z M255,310 L265,310 L265,325 L255,325 Z M255,340 L265,340 L265,355 L255,355 Z M255,370 L265,370 L265,385 L255,385 Z M255,400 L265,400 L265,415 L255,415 Z M255,430 L265,430 L265,445 L255,445 Z"/>
+    </group>
+
+    <!-- Oscar statue outline -->
+    <path
+        android:fillColor="#E0E0E0"
+        android:pathData="M310,280 L310,320 L300,320 L300,340 L320,340 L320,320 L310,320 L310,280 M305,260 Q305,245 310,245 Q315,245 315,260 L315,280 L305,280 Z"/>
+
+    <!-- Film reel bottom right -->
+    <path
+        android:fillColor="#E0E0E0"
+        android:strokeColor="#CCCCCC"
+        android:strokeWidth="2"
+        android:pathData="M340,360 m-30,0 a30,30 0 1,1 60,0 a30,30 0 1,1 -60,0"/>
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M340,360 m-10,0 a10,10 0 1,1 20,0 a10,10 0 1,1 -20,0"/>
+
+</vector>

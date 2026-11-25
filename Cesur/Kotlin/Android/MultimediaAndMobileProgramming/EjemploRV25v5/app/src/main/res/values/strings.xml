@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">EjemploRV25v5</string>
+    <string name="nueva_fruta">Nueva fruta</string>
+    <string name="limpiar">Limpiar</string>
+    <string name="buscar">Buscar</string>
+    <string name="frutas">Frutas</string>
+    <string name="correo_electronico">Correo electrónico</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="recordar">Recordar</string>
+    <string name="email">Correo electrónico</string>
+    <string name="caracteres">Al menos 8 caracteres</string>
+</resources>

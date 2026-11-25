@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">PMDMUD10CP01</string>
+    <string name="nueva_pelicula">Nueva pelicula</string>
+    <string name="limpiar">Limpiar</string>
+    <string name="buscar">Buscar</string>
+    <string name="peliculas">Peliculas</string>
+    <string name="correo_electronico">Correo electrónico</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="recordar">Recordar</string>
+    <string name="email">Correo electrónico</string>
+    <string name="caracteres">Al menos 8 caracteres</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="registro">Registro</string>
+    <string name="nombre">Nombre</string>
+    <string name="confirmar_password">Confirmar contraseña</string>
+    <string name="registrarse">Registrarse</string>
+    <string name="ya_tienes_cuenta">¿Ya tienes cuenta? Inicia sesión</string>
+    <string name="no_tienes_cuenta">¿No tienes cuenta? Regístrate</string>
+    <item name="menu_detalle" type="id" />
+    <item name="menu_editar" type="id" />
+    <item name="menu_eliminar" type="id" />
+    <item name="menu_hacer_foto" type="id" />
+    <item name="menu_ver_foto" type="id" />
+</resources>

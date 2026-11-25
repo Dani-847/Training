@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_categorias"
+        android:icon="@android:drawable/ic_menu_more"
+        android:title="@string/categorias"
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/menu_favoritas"
+                android:title="@string/favoritas" />
+            <item
+                android:id="@+id/menu_en_cartelera"
+                android:title="@string/en_cartelera" />
+            <item
+                android:id="@+id/menu_populares"
+                android:title="@string/populares" />
+            <item
+                android:id="@+id/menu_mejor_valoradas"
+                android:title="@string/mejor_valoradas" />
+            <item
+                android:id="@+id/menu_proximamente"
+                android:title="@string/proximamente" />
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/menu_logout"
+        android:icon="@android:drawable/ic_menu_close_clear_cancel"
+        android:title="@string/btn_logout"
+        app:showAsAction="never"/>
+</menu>

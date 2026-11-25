@@ -1,0 +1,44 @@
+<resources>
+    <string name="app_name">PMDMUD13CP01</string>
+    <string name="nohay">No hay películas disponibles en este momento</string>
+    <string name="poster">Poster de la película</string>
+    <string name="flecha">Flecha</string>
+    <string name="sinopsis">Sinopsis</string>
+    <string name="titulo_original">Título original</string>
+    <string name="estreno">Estreno: %1$s</string>
+    <string name="valoracion_del_publico">Valoración del público: %1$s</string>
+
+    <!-- Categorías del menú -->
+    <string name="categorias">Categorías</string>
+    <string name="favoritas">Favoritas</string>
+    <string name="en_cartelera">En cartelera</string>
+    <string name="populares">Populares</string>
+    <string name="mejor_valoradas">Mejor valoradas</string>
+    <string name="proximamente">Próximamente</string>
+
+    <!-- Favoritos -->
+    <string name="agregar_favorita">Agregar a favoritas</string>
+    <string name="quitar_favorita">Quitar de favoritas</string>
+    <string name="agregada_favoritas">Añadida a favoritas</string>
+    <string name="quitada_favoritas">Eliminada de favoritas</string>
+
+    <!-- Login/Registro -->
+    <string name="login_title">Login</string>
+    <string name="registro_title">Crear cuenta</string>
+    <string name="hint_email">Nombre de usuario</string>
+    <string name="hint_password">Contraseña</string>
+    <string name="hint_confirm_password">Confirmar contraseña</string>
+    <string name="btn_login">Acceder</string>
+    <string name="btn_create_account">Crear cuenta</string>
+    <string name="btn_back">Volver</string>
+    <string name="btn_logout">Cerrar sesión</string>
+
+    <!-- Errores -->
+    <string name="error_email_invalido">Email inválido</string>
+    <string name="error_password_corta">La contraseña debe tener al menos 4 caracteres</string>
+    <string name="error_passwords_no_coinciden">Las contraseñas no coinciden</string>
+    <string name="error_campos_vacios">Completa todos los campos</string>
+    <string name="error_credenciales">Credenciales incorrectas</string>
+    <string name="error_email_registrado">El email ya está registrado</string>
+    <string name="exito_registro">Tu cuenta ha sido guardada</string>
+</resources>

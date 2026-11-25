@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_detalle"
+        android:title="Detalle" />
+    <item
+        android:id="@+id/menu_editar"
+        android:title="Editar" />
+    <item
+        android:id="@+id/menu_eliminar"
+        android:title="Eliminar" />
+    <item
+        android:id="@+id/menu_hacer_foto"
+        android:title="Hacer foto" />
+    <item
+        android:id="@+id/menu_ver_foto"
+        android:title="Ver foto" />
+</menu>

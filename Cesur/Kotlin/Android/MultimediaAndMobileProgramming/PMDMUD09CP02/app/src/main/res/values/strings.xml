@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">UD09CP02</string>
+
+    <string name="login_email_label">Email</string>
+    <string name="login_email_helper">Dirección de e-mail</string>
+    <string name="login_password_label">Password</string>
+    <string name="login_password_helper">Al menos 8 caracteres</string>
+    <string name="login_remember">Recordar datos</string>
+    <string name="login_button">Login</string>
+
+    <string name="toolbar_peliculas">Películas</string>
+
+    <string name="menu_limpiar">Limpiar</string>
+    <string name="menu_buscar">Buscar</string>
+
+    <string name="detail_year_prefix">Año: %1$d</string>
+    <string name="detail_minutes_prefix">Duración: %1$d minutos</string>
+    <string name="detail_country_prefix">Nacionalidad: %1$s</string>
+</resources>
