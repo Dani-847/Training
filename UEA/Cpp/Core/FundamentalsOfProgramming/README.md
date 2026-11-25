@@ -27,6 +27,14 @@ Each exercise folder contains:
 | `solution.cpp` | Official reference solution provided by the instructor |
 | `proposed_solution.cpp` | My own solution. Written when no official solution was published, or when the official one does not do exactly what the statement asks (U1-6, U2-2, SC2; each README explains the difference) |
 
+When a folder has more than one solution, all of them are kept on purpose as alternative approaches to the same problem:
+
+| Folder | Alternatives |
+|---|---|
+| [U1-06 Inventory](Exercises/Unit1/06_Inventory), [U2-02 LatencyTake](Exercises/Unit2/02_LatencyTake), [SC2 Avengers](CollaborativeSessions/SC2_Avengers) | Official solution vs. my proposed solution |
+| [SC1 Death Stranding](CollaborativeSessions/SC1_DeathStranding) | Three parallel arrays vs. an array of structs |
+| [SC3 Spider-Man](CollaborativeSessions/SC3_SpiderMan) | Data read from a JSON Lines file vs. data in an in-memory array |
+
 ## Theory
 
 | File | Description |
