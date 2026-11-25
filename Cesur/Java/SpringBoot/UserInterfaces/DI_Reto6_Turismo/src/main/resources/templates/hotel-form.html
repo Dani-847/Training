@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${modoEdicion} ? 'Editar hotel - Turismo' : 'Nuevo hotel - Turismo'">Formulario</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+
+    <header>
+        <div class="header-top">
+            <h1>Turismo &mdash; Hoteles</h1>
+            <div class="auth-section">
+                <span sec:authorize="isAuthenticated()">
+                    <span sec:authentication="name"></span>
+                    <span sec:authorize="hasRole('ADMIN')" class="badge-admin">ADMIN</span>
+                </span>
+                <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
+                    <button type="submit" class="btn btn-small">Salir</button>
+                </form>
+            </div>
+        </div>
+        <nav class="header-nav">
+            <a th:href="@{/hoteles}">&#8592; Todos los hoteles</a>
+            <span th:if="${modoEdicion}">
+                | <a th:href="@{/hoteles/{id}(id=${hotel._id})}" th:text="${hotel.hotelName}"></a>
+            </span>
+        </nav>
+    </header>
+
+    <main>
+        <h2 th:text="${modoEdicion} ? 'Editar hotel' : 'Nuevo hotel'">Formulario</h2>
+
+        <form th:action="${modoEdicion} ? @{/hoteles/{id}/editar(id=${hotel._id})} : @{/hoteles/nuevo}"
+              method="post" class="hotel-form">
+
+            <p class="form-section-title">Identificacion</p>
+
+            <div class="form-row">
+                <div class="form-col" style="flex:2">
+                    <label for="hotelName">Nombre del hotel *</label>
+                    <input type="text" id="hotelName" name="hotelName"
+                           th:value="${hotel.hotelName}" placeholder="Nombre completo" required>
+                </div>
+                <div class="form-col">
+                    <label for="hotelCode">Codigo</label>
+                    <input type="number" id="hotelCode" name="hotelCode"
+                           th:value="${hotel.hotelCode}" placeholder="12345">
+                </div>
+                <div class="form-col">
+                    <label for="hotelRating">Categoria</label>
+                    <select id="hotelRating" name="hotelRating">
+                        <option value="">Sin categoria</option>
+                        <option value="FiveStar"  th:selected="${hotel.hotelRating == 'FiveStar'}">&#9733;&#9733;&#9733;&#9733;&#9733; 5 estrellas</option>
+                        <option value="FourStar"  th:selected="${hotel.hotelRating == 'FourStar'}">&#9733;&#9733;&#9733;&#9733; 4 estrellas</option>
+                        <option value="ThreeStar" th:selected="${hotel.hotelRating == 'ThreeStar'}">&#9733;&#9733;&#9733; 3 estrellas</option>
+                    </select>
+                </div>
+            </div>
+
+            <p class="form-section-title">Ubicacion</p>
+
+            <div class="form-row">
+                <div class="form-col">
+                    <label for="countryCode">Codigo pais</label>
+                    <input type="text" id="countryCode" name="countryCode"
+                           th:value="${hotel.countryCode}" placeholder="ES, US...">
+                </div>
+                <div class="form-col" style="flex:2">
+                    <label for="countryName">Nombre pais</label>
+                    <input type="text" id="countryName" name="countryName"
+                           th:value="${hotel.countryName}" placeholder="Espana...">
+                </div>
+                <div class="form-col">
+                    <label for="cityCode">Codigo ciudad</label>
+                    <input type="number" id="cityCode" name="cityCode" th:value="${hotel.cityCode}">
+                </div>
+                <div class="form-col" style="flex:2">
+                    <label for="cityName">Ciudad</label>
+                    <input type="text" id="cityName" name="cityName"
+                           th:value="${hotel.cityName}" placeholder="Madrid...">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-col" style="flex:3">
+                    <label for="address">Direccion</label>
+                    <input type="text" id="address" name="address"
+                           th:value="${hotel.address}" placeholder="Calle, numero...">
+                </div>
+                <div class="form-col">
+                    <label for="pinCode">Codigo postal</label>
+                    <input type="text" id="pinCode" name="pinCode" th:value="${hotel.pinCode}">
+                </div>
+            </div>
+
+            <p class="form-section-title">Informacion</p>
+
+            <div>
+                <label for="description">Descripcion</label>
+                <textarea id="description" name="description"
+                          placeholder="Descripcion del hotel..." th:text="${hotel.description}"></textarea>
+            </div>
+            <div>
+                <label for="attractions">Atracciones cercanas</label>
+                <textarea id="attractions" name="attractions"
+                          placeholder="Monumentos, playas..." th:text="${hotel.attractions}"></textarea>
+            </div>
+            <div>
+                <label for="hotelFacilities">Instalaciones y servicios</label>
+                <textarea id="hotelFacilities" name="hotelFacilities"
+                          placeholder="WiFi, Piscina, Spa..." th:text="${hotel.hotelFacilities}"></textarea>
+            </div>
+
+            <p class="form-section-title">Contacto</p>
+
+            <div class="form-row">
+                <div class="form-col">
+                    <label for="phoneNumber">Telefono</label>
+                    <input type="text" id="phoneNumber" name="phoneNumber" th:value="${hotel.phoneNumber}">
+                </div>
+                <div class="form-col">
+                    <label for="faxNumber">Fax</label>
+                    <input type="text" id="faxNumber" name="faxNumber" th:value="${hotel.faxNumber}">
+                </div>
+                <div class="form-col" style="flex:2">
+                    <label for="hotelWebsiteUrl">Sitio web</label>
+                    <input type="url" id="hotelWebsiteUrl" name="hotelWebsiteUrl"
+                           th:value="${hotel.hotelWebsiteUrl}" placeholder="https://...">
+                </div>
+            </div>
+
+            <div class="form-buttons">
+                <a th:href="${modoEdicion} ? @{/hoteles/{id}(id=${hotel._id})} : @{/hoteles}"
+                   class="btn">Cancelar</a>
+                <button type="submit" class="btn">
+                    <span th:text="${modoEdicion} ? 'Guardar cambios' : 'Crear hotel'"></span>
+                </button>
+            </div>
+
+        </form>
+    </main>
+
+    <footer><p>Turismo Web App &mdash; Spring Boot MVC + MongoDB</p></footer>
+</div>
+<script th:src="@{/js/header.js}"></script>
+</body>
+</html>

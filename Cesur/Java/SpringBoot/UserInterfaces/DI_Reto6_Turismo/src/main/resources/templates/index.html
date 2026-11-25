@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Turismo - Hoteles</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+
+    <header>
+        <div class="header-top">
+            <h1>Turismo &mdash; Hoteles</h1>
+            <div class="auth-section">
+                <span sec:authorize="isAuthenticated()">
+                    <span sec:authentication="name"></span>
+                    <span sec:authorize="hasRole('ADMIN')" class="badge-admin">ADMIN</span>
+                </span>
+                <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
+                    <button type="submit" class="btn btn-small">Salir</button>
+                </form>
+                <a sec:authorize="!isAuthenticated()" th:href="@{/login}" class="btn btn-small">Iniciar sesion</a>
+            </div>
+        </div>
+        <nav class="header-nav">
+            <form th:action="@{/hoteles}" method="get" style="display:inline;">
+                <input class="filter-input" name="buscar" th:value="${buscar}" placeholder="Buscar hotel...">
+                <button type="submit" class="btn btn-small">Buscar</button>
+            </form>
+            &nbsp;|&nbsp;
+            <a th:href="@{/hoteles}" th:classappend="${buscar == null and pais == null and ciudad == null and rating == null} ? 'active' : ''">Todos</a>
+            | <a th:href="@{/hoteles(rating='FiveStar')}"  th:classappend="${rating == 'FiveStar'}  ? 'active' : ''">&#9733;&#9733;&#9733;&#9733;&#9733;</a>
+            | <a th:href="@{/hoteles(rating='FourStar')}"  th:classappend="${rating == 'FourStar'}  ? 'active' : ''">&#9733;&#9733;&#9733;&#9733;</a>
+            | <a th:href="@{/hoteles(rating='ThreeStar')}" th:classappend="${rating == 'ThreeStar'} ? 'active' : ''">&#9733;&#9733;&#9733;</a>
+            &nbsp;|&nbsp;
+            <form th:action="@{/hoteles}" method="get" style="display:inline;">
+                <input class="filter-input" name="ciudad" th:value="${ciudad}" placeholder="Ciudad..." style="width:110px">
+                <input class="filter-input" name="pais"   th:value="${pais}"   placeholder="Pais (ES...)" style="width:90px">
+                <button type="submit" class="btn btn-small">Filtrar</button>
+            </form>
+        </nav>
+    </header>
+
+    <!-- Mensajes flash -->
+    <div th:if="${mensajeExito}" class="alert alert-success" th:text="${mensajeExito}"></div>
+    <div th:if="${mensajeError}"  class="alert alert-error"   th:text="${mensajeError}"></div>
+
+    <!-- Estadisticas -->
+    <div th:if="${stats}" class="stats-bar">
+        <div class="stat-item">
+            <span class="stat-number" th:text="${stats.total()}">0</span>
+            <span class="stat-label">Total</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-number" th:text="${stats.cincoEstrellas()}">0</span>
+            <span class="stat-label">5 estrellas</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-number" th:text="${stats.cuatroEstrellas()}">0</span>
+            <span class="stat-label">4 estrellas</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-number" th:text="${stats.tresEstrellas()}">0</span>
+            <span class="stat-label">3 estrellas</span>
+        </div>
+    </div>
+
+    <main>
+        <!-- Sin resultados -->
+        <div th:if="${hoteles.isEmpty()}" class="description-box" style="text-align:center">
+            <p style="font-size:1.1rem;">No se encontraron hoteles.</p>
+            <a th:href="@{/hoteles}" class="btn" style="margin-top:10px">Ver todos</a>
+        </div>
+
+        <!-- Grid de hoteles -->
+        <div th:unless="${hoteles.isEmpty()}" class="games-grid">
+            <a th:each="h : ${hoteles}"
+               th:href="@{/hoteles/{id}(id=${h._id})}"
+               class="hotel-card">
+                <div class="hotel-card-thumb">
+                    <span th:if="${h.hotelRating == 'FiveStar'}">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+                    <span th:if="${h.hotelRating == 'FourStar'}">&#9733;&#9733;&#9733;&#9733;</span>
+                    <span th:if="${h.hotelRating == 'ThreeStar'}">&#9733;&#9733;&#9733;</span>
+                    <span th:if="${h.hotelRating == null or (h.hotelRating != 'FiveStar' and h.hotelRating != 'FourStar' and h.hotelRating != 'ThreeStar')}">&#127963;</span>
+                </div>
+                <div class="game-info">
+                    <h3 class="hotel-name" th:text="${h.hotelName != null ? h.hotelName : '(Sin nombre)'}">Hotel</h3>
+                    <p class="hotel-location">
+                        <span th:if="${h.cityName != null}" th:text="${h.cityName}"></span>
+                        <span th:if="${h.cityName != null and h.countryCode != null}">, </span>
+                        <span th:if="${h.countryCode != null}" th:text="${h.countryCode}"></span>
+                    </p>
+                </div>
+            </a>
+        </div>
+    </main>
+
+    <footer>
+        <p>Turismo Web App &mdash; Spring Boot MVC + MongoDB</p>
+    </footer>
+
+</div>
+
+<!-- FAB solo para ADMIN -->
+<a sec:authorize="hasRole('ADMIN')" th:href="@{/hoteles/nuevo}" class="fab-button">+</a>
+
+<script th:src="@{/js/header.js}"></script>
+</body>
+</html>

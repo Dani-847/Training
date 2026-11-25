@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Error - Turismo</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>Turismo &mdash; Hoteles</h1>
+        <nav class="header-nav">
+            <a th:href="@{/hoteles}">&#8592; Volver al inicio</a>
+        </nav>
+    </header>
+    <main>
+        <div class="description-box">
+            <h2>Error</h2>
+            <p th:text="${mensaje != null ? mensaje : (message != null ? message : 'El recurso solicitado no existe.')}"></p>
+        </div>
+        <div class="form-buttons">
+            <a th:href="@{/hoteles}" class="btn">Volver al listado</a>
+        </div>
+    </main>
+    <footer><p>Turismo Web App &mdash; Spring Boot MVC + MongoDB</p></footer>
+</div>
+</body>
+</html>

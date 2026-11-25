@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Iniciar sesion - Turismo</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="login-wrap">
+    <div class="login-box">
+        <h2>Turismo</h2>
+        <p class="subtitle">Gestion de hoteles</p>
+
+        <div th:if="${errorLogin}" class="alert alert-error" th:text="${errorLogin}"></div>
+        <div th:if="${param.logout}" class="alert alert-success">Sesion cerrada correctamente.</div>
+
+        <form th:action="@{/login}" method="post" class="login-form">
+            <div>
+                <label for="username">Usuario</label>
+                <input type="text" id="username" name="username" placeholder="admin / usuario"
+                       autocomplete="username" required autofocus>
+            </div>
+            <div>
+                <label for="password">Contrasena</label>
+                <input type="password" id="password" name="password" placeholder="Contrasena"
+                       autocomplete="current-password" required>
+            </div>
+            <button type="submit" class="btn" style="width:100%">Iniciar sesion</button>
+        </form>
+
+        <p class="login-hint">admin / admin123 &nbsp;|&nbsp; usuario / user123</p>
+        <p style="text-align:center; margin-top:10px; font-size:0.85rem;">
+            <a th:href="@{/hoteles}">Ver hoteles sin iniciar sesion</a>
+        </p>
+    </div>
+</div>
+</body>
+</html>

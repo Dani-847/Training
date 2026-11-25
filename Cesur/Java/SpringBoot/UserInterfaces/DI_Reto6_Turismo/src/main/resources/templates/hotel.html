@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${hotel.hotelName} + ' - Turismo'">Hotel</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+
+    <header>
+        <div class="header-top">
+            <h1>Turismo &mdash; Hoteles</h1>
+            <div class="auth-section">
+                <span sec:authorize="isAuthenticated()">
+                    <span sec:authentication="name"></span>
+                    <span sec:authorize="hasRole('ADMIN')" class="badge-admin">ADMIN</span>
+                </span>
+                <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
+                    <button type="submit" class="btn btn-small">Salir</button>
+                </form>
+                <a sec:authorize="!isAuthenticated()" th:href="@{/login}" class="btn btn-small">Iniciar sesion</a>
+            </div>
+        </div>
+        <nav class="header-nav">
+            <a th:href="@{/hoteles}">&#8592; Todos los hoteles</a>
+        </nav>
+    </header>
+
+    <div class="breadcrumb">
+        <a th:href="@{/hoteles}">Hoteles</a>
+        <span class="sep">/</span>
+        <span th:text="${hotel.hotelName}">Hotel</span>
+    </div>
+
+    <div th:if="${mensajeExito}" class="alert alert-success" th:text="${mensajeExito}"></div>
+
+    <main class="game-detail">
+
+        <!-- Cabecera con datos principales -->
+        <div class="detail-content">
+            <div class="hotel-card-thumb" style="width:160px;min-width:160px;height:200px;border-radius:8px;flex-direction:column;gap:6px;font-size:1.4rem;">
+                <span th:if="${hotel.hotelRating == 'FiveStar'}">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+                <span th:if="${hotel.hotelRating == 'FourStar'}">&#9733;&#9733;&#9733;&#9733;</span>
+                <span th:if="${hotel.hotelRating == 'ThreeStar'}">&#9733;&#9733;&#9733;</span>
+                <span th:if="${hotel.hotelRating == null or (hotel.hotelRating != 'FiveStar' and hotel.hotelRating != 'FourStar' and hotel.hotelRating != 'ThreeStar')}">&#127963;</span>
+                <span th:if="${hotel.hotelRating != null}" style="font-size:0.75rem;color:#555;" th:text="${hotel.hotelRating}"></span>
+            </div>
+            <div class="detail-info">
+                <h2 th:text="${hotel.hotelName}">Nombre</h2>
+                <p class="detail-meta" th:if="${hotel.cityName != null}">
+                    Ciudad: <strong th:text="${hotel.cityName}"></strong>
+                </p>
+                <p class="detail-meta" th:if="${hotel.countryName != null}">
+                    Pais: <strong th:text="${hotel.countryName}"></strong>
+                    <span th:if="${hotel.countryCode != null}"> (<span th:text="${hotel.countryCode}"></span>)</span>
+                </p>
+                <p class="detail-meta" th:if="${hotel.hotelCode != null}">
+                    Codigo: <strong th:text="${hotel.hotelCode}"></strong>
+                </p>
+                <p class="detail-meta" th:if="${hotel.address != null and !#strings.isEmpty(hotel.address)}"
+                   th:text="${hotel.address}"></p>
+                <p class="detail-meta" th:if="${hotel.phoneNumber != null}">
+                    Tel: <span th:text="${hotel.phoneNumber}"></span>
+                </p>
+                <p class="detail-meta" th:if="${hotel.hotelWebsiteUrl != null and !#strings.isEmpty(hotel.hotelWebsiteUrl)}">
+                    Web: <a th:href="${hotel.hotelWebsiteUrl}" target="_blank" th:text="${hotel.hotelWebsiteUrl}"></a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Descripcion -->
+        <div th:if="${hotel.description != null and !#strings.isEmpty(hotel.description)}"
+             class="description-box">
+            <p class="detail-label">Descripcion</p>
+            <div th:utext="${hotel.description}"></div>
+        </div>
+
+        <!-- Atracciones -->
+        <div th:if="${hotel.attractions != null and !#strings.isEmpty(hotel.attractions)}"
+             class="description-box">
+            <p class="detail-label">Atracciones cercanas</p>
+            <div th:utext="${hotel.attractions}"></div>
+        </div>
+
+        <!-- Instalaciones -->
+        <div th:if="${hotel.hotelFacilities != null and !#strings.isEmpty(hotel.hotelFacilities)}"
+             class="description-box">
+            <p class="detail-label">Instalaciones y servicios</p>
+            <div th:utext="${hotel.hotelFacilities}"></div>
+        </div>
+
+        <!-- Botones -->
+        <div class="form-buttons">
+            <a th:href="@{/hoteles}" class="btn">Volver</a>
+            <a sec:authorize="hasRole('ADMIN')"
+               th:href="@{/hoteles/{id}/editar(id=${hotel._id})}"
+               class="btn">Editar</a>
+            <form sec:authorize="hasRole('ADMIN')"
+                  th:action="@{/hoteles/{id}/eliminar(id=${hotel._id})}"
+                  method="post" style="display:inline;"
+                  onsubmit="return confirm('Eliminar este hotel?')">
+                <button type="submit" class="btn btn-danger">Eliminar</button>
+            </form>
+        </div>
+
+    </main>
+
+    <footer><p>Turismo Web App &mdash; Spring Boot MVC + MongoDB</p></footer>
+</div>
+<script th:src="@{/js/header.js}"></script>
+</body>
+</html>
