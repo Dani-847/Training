@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${game.id != null ? 'Editar' : 'Nuevo'} + ' Juego - Biblioteca de Juegos'">Formulario</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>Biblioteca de Juegos</h1>
+        <nav class="header-nav">
+            <span>Plataformas:</span>
+            <a th:href="@{/}">Todos</a>
+            <span th:each="p : ${platforms}">
+                | <a th:href="@{/(platform=${p})}" th:text="${p}"></a>
+            </span>
+        </nav>
+    </header>
+
+    <main>
+        <h2 th:text="${game.id != null ? 'Editar Juego' : 'Nuevo Juego'}"></h2>
+        <form th:action="${game.id != null ? '/juego/' + game.id + '/editar' : '/'}" method="post" class="game-form">
+            <input type="text" name="title" th:value="${game.title}" placeholder="Título del juego" required>
+            <input type="text" name="platform" th:value="${game.platform}" placeholder="Plataforma" required>
+            <input type="number" name="year" th:value="${game.year}" placeholder="Año" min="1970" max="2030">
+            <textarea name="description" placeholder="Descripción del juego" rows="4" th:text="${game.description}"></textarea>
+            <div class="form-buttons">
+                <a th:href="${game.id != null ? '/juego/' + game.id : '/'}" class="btn">Volver</a>
+                <button type="submit" class="btn">Guardar</button>
+            </div>
+        </form>
+    </main>
+
+    <footer>
+        <p>Realizado por Daniel</p>
+    </footer>
+</div>
+<script th:src="@{/js/header.js}"></script>
+</body>
+</html>

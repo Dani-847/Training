@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Saludo - Biblioteca de Juegos</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>Biblioteca de Juegos</h1>
+    </header>
+    <nav class="platforms-nav">
+        <a th:href="@{/}">Volver al inicio</a>
+    </nav>
+    <main class="game-detail">
+        <div class="detail-content">
+            <img th:src="@{/img/internet.png}" alt="Internet" class="detail-image">
+            <div class="detail-info">
+                <h2>Hola <span th:text="${nombre}"></span></h2>
+                <p class="platform" th:text="${apellido}"></p>
+            </div>
+        </div><div class="description-box">
+        <p>Bienvenido al mundo de desarrollo web</p>
+    </div>
+        <a href="/" class="btn-volver">Volver</a>
+    </main>
+    <footer>
+        <p>Realizado por Daniel</p>
+    </footer>
+</div>
+</body>
+</html>

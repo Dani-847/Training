@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Error - Biblioteca de Juegos</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>Biblioteca de Juegos</h1>
+    </header>
+    <nav class="platforms-nav">
+        <a th:href="@{/}">Volver al inicio</a>
+    </nav>
+    <main>
+        <div class="description-box">
+            <h2>Error</h2>
+            <p th:text="${error}"></p>
+        </div>
+        <a href="/" class="btn-volver">Volver</a>
+    </main><footer>
+    <p>Realizado por Daniel</p>
+</footer>
+</div>
+</body>
+</html>
